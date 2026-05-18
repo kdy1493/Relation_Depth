@@ -77,6 +77,9 @@ data/processed/
 data/external/
 datasets/
 
+# Vendored upstream clones (logic lives under src/syntable_viz/)
+external/SynTable/
+
 # SynTable assets (images, depth maps) — adjust if you version a tiny sample
 data/syntable/validation/
 data/syntable/train/

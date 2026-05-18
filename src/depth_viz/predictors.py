@@ -49,7 +49,7 @@ class DepthPredictor(ABC):
             pred = pred[:, 0]
         elif pred.ndim != 3:
             raise ValueError(f"Unexpected prediction shape: {tuple(pred.shape)}")
-        pred = F.interpolate(pred[:, None], target_hw, mode="bilinear", align_corners=True)[:, 0, 0]
+        pred = F.interpolate(pred[:, None], target_hw, mode="bilinear", align_corners=True)[:, 0]
         return pred
 
     @abstractmethod

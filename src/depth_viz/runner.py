@@ -202,6 +202,8 @@ def run_pointcloud_visualize(args: argparse.Namespace) -> dict[str, Any]:
             if image_batch.ndim == 3:
                 image_batch = image_batch.unsqueeze(0)
             pred = predictor.predict(image_batch, (h, w))
+            if pred.ndim == 3:
+                pred = pred[0]
             if args.scale_align:
                 pred = median_scale_align(pred[valid_t], gt_depth[valid_t])
             pred_np = pred.detach().cpu().numpy().astype(np.float32)

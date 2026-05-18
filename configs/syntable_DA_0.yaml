@@ -15,7 +15,7 @@
 #
 # Eval:
 #   python scripts/depth_anything_v2/eval_depth_anything_v2.py -c configs/syntable_DA_0.yaml \
-#     --checkpoint outputs/syntable_DA_0/checkpoints/best.pth
+#     --checkpoint runs/syntable_DA_0/checkpoints/best.pth
 
 data:
   train_list: data/syntable/lists/syntable_train.txt
@@ -57,7 +57,7 @@ device:
   cuda_visible_devices: [3, 4]
 
 output:
-  save_path: outputs/syntable_DA_0
+  save_path: runs/syntable_DA_0
 
 distributed:
   port: null

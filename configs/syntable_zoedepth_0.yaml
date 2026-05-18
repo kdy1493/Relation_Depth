@@ -11,7 +11,7 @@
 #
 # Eval:
 #   python scripts/zoedepth/eval_zoedepth.py -c configs/syntable_zoedepth_0.yaml \
-#     --checkpoint outputs/syntable_zoedepth_0/checkpoints/best.pth --scale-align-eval
+#     --checkpoint runs/syntable_zoedepth_0/checkpoints/best.pth --scale-align-eval
 
 data:
   train_list: data/syntable/lists/syntable_train.txt
@@ -75,7 +75,7 @@ device:
   cuda_visible_devices: [3,4]
 
 output:
-  save_path: outputs/syntable_zoedepth_0
+  save_path: runs/syntable_zoedepth_0
 
 distributed:
   port: null

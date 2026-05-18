@@ -12,8 +12,6 @@ import shutil
 from math import sqrt
 import cv2
 import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-import matplotlib.patches as mpatches
 import networkx as nx
 import numpy as np
 import pycocotools.mask as mask_util
@@ -96,16 +94,12 @@ def rle2mask(mask_rle, shape=(480,640)):
 
 def segmToRLE(segm, img_size):
     h, w = img_size
-    if type(segm) == list:
-        # polygon -- a single object might consist of multiple parts
-        # we merge all parts into one mask rle code
-        rles = maskUtils.frPyObjects(segm, h, w)
-        rle = maskUtils.merge(rles)
-    elif type(segm["counts"]) == list:
-        # uncompressed RLE
-        rle = maskUtils.frPyObjects(segm, h, w)
+    if isinstance(segm, list):
+        rles = mask_util.frPyObjects(segm, h, w)
+        rle = mask_util.merge(rles)
+    elif isinstance(segm["counts"], list):
+        rle = mask_util.frPyObjects(segm, h, w)
     else:
-        # rle
         rle = segm
     return rle
 
@@ -147,8 +141,6 @@ def main(argv: list[str] | None = None) -> None:
 
     for i, ann in enumerate(data['annotations']):
         image_id = ann["image_id"]
-        ann_id = ann["id"]
-        # print(ann_id)
         if image_id not in referenceDict:
             referenceDict.update({image_id:{"rgb":None,"depth":None, "amodal":[], "visible":[],
     "occluded":[],"occluded_rate":[],"category_id":[],"object_name":[]}})
@@ -462,7 +454,7 @@ def main(argv: list[str] | None = None) -> None:
                 'arrowstyle': '-|>',
                 'arrowsize': 10
                 }
-                fig1 = plt.figure(figsize=(20, 6), dpi=80)
+                plt.figure(figsize=(20, 6), dpi=80)
                 
                 plt.subplot(1,3,1)
                 # nx.draw_planar(G, pos, with_labels = True, arrows=True, **options)

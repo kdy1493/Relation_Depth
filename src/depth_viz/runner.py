@@ -56,13 +56,14 @@ def _auto_depth_trunc(depth_m: np.ndarray, valid: np.ndarray, fallback: float) -
 
 
 def _default_save_dir(checkpoint: Path | None, backend: str | None, *, gt_only: bool = False) -> Path:
+    base = Path("results") / "pointcloud"
+    if gt_only:
+        return base / "gt_only"
     if checkpoint is not None:
         ckpt_dir = checkpoint.parent
         run_root = ckpt_dir.parent if ckpt_dir.name == "checkpoints" else ckpt_dir
-        return run_root / "figures" / "pointcloud"
-    if gt_only:
-        return Path("results") / "pointcloud" / "gt_only"
-    return Path("results") / "pointcloud" / (backend or "unknown")
+        return base / run_root.name
+    return base / (backend or "unknown")
 
 
 def _export_one(

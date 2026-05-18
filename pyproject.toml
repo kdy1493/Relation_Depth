@@ -1,0 +1,35 @@
+[project]
+name = "depthanything"
+version = "0.1.0"
+description = "Fine-tune and evaluate Depth Anything V2 on custom RGB–depth pairs"
+requires-python = ">=3.11"
+dependencies = [
+    "pyrootutils>=1.0.4",
+    "numpy>=1.24",
+    "opencv-python>=4.8",
+    "pyyaml>=6.0",
+    "tensorboard>=2.14",
+    "tqdm>=4.66",
+    "torch>=2.11.0",
+    "torchvision>=0.26.0",
+    "torchaudio>=2.11.0",
+    "timm>=0.9.0",
+    "huggingface-hub>=0.20.0",
+    "open3d>=0.19.0",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# Upstream ZoeDepth lives under src/zoedepth/vendor/zoedepth/ (not part of this package).
+exclude = ["zoedepth.vendor*"]
+
+[[tool.uv.index]]
+url = "https://download.pytorch.org/whl/cu128"
+
+[[tool.uv.index]]
+url = "https://pypi.org/simple"
+default = true

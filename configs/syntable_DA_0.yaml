@@ -1,0 +1,63 @@
+# Experiment: syntable_DA_0
+# Dataset : SynTable (BOP-HB objects, tabletop, NVIDIA Isaac Sim)
+# Model   : Depth Anything V2 - vitb (metric head)
+# Purpose : Baseline fine-tuning on SynTable train split
+#
+# Run (single GPU):
+#   python scripts/depth_anything_v2/train_depth_anything_v2.py -c configs/syntable_DA_0.yaml 2>&1 | tee syntable_DA_0.log
+#
+# Run (multi GPU):
+#   torchrun --nproc_per_node=2 scripts/depth_anything_v2/train_depth_anything_v2.py -c configs/syntable_DA_0.yaml 2>&1 | tee syntable_DA_0.log
+#
+# Pair list 생성 (학습 전 1회):
+#   python scripts/data_processing/make_pair_list.py --split train
+#   python scripts/data_processing/make_pair_list.py --split val
+#
+# Eval:
+#   python scripts/depth_anything_v2/eval_depth_anything_v2.py -c configs/syntable_DA_0.yaml \
+#     --checkpoint outputs/syntable_DA_0/checkpoints/best.pth
+
+data:
+  train_list: data/syntable/lists/syntable_train.txt
+  val_list:   data/syntable/lists/syntable_val.txt
+  list_root:  null          # pair list 안의 경로가 이미 repo-root 기준이면 null
+  # SynTable depth PNG는 mm 정수값 → 1000으로 나눠 미터로 변환
+  depth_scale: 1000.0
+
+model:
+  encoder: vitb
+  max_depth: 12.0           # 데이터 실측 최대값 ~11.6m에 0.4m 여유
+  pretrained_from: checkpoints/depth_anything_v2_vitb.pth
+  resume_from: null
+
+training:
+  img_size: 518             # DA2 기본 입력 해상도 (patch 14 배수)
+  min_depth: 0.001
+  epochs: 50
+  batch_size: 1
+  lr: 5.0e-6
+  num_workers: 4
+  seed: 0
+  find_unused_parameters: true
+  # --- 추가 기능 ---
+  eval_freq: 2              # 매 epoch마다 평가
+  grad_accum_steps: 1       # 유효 배치 = batch_size × grad_accum_steps
+  amp: true                # AMP (CUDA 필요, A100 등에서 활성화 권장)
+  patience: null            # 공정 비교를 위해 early stopping 비활성화
+  ema_decay: 0.9998         # EMA 가중치 (0.0 = 비활성화)
+  monitor_metric: abs_rel   # best 체크포인트 선택 기준 지표
+  monitor_mode: min         # abs_rel은 낮을수록 좋음
+  auto_batch_size: true    # OOM 탐색 후 grad_accum 자동 조정
+  scale_align_eval: false    # relative depth 비교를 위해 eval 시 median scale alignment
+
+device:
+  # Always interpreted as PyTorch CUDA indices (cuda:<index>), not nvidia-smi ordering.
+  # Optional: pin visible physical GPUs from YAML (same effect as CUDA_VISIBLE_DEVICES).
+  # When cuda_indices is omitted, local indices are inferred as [0..N-1].
+  cuda_visible_devices: [3, 4]
+
+output:
+  save_path: outputs/syntable_DA_0
+
+distributed:
+  port: null

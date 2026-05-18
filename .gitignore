@@ -1,0 +1,104 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+.eggs/
+dist/
+build/
+pip-wheel-metadata/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.cover
+.hypothesis/
+
+# --- Virtual env / package managers ---
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+.conda/
+.python-version
+uv.lock.bak
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+profile_default/
+
+# --- IDE / editor (keep shared rules; ignore local state) ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.claude/
+
+# Cursor: ignore local workspace cache; keep committed rules if present
+.cursor/
+!.cursor/rules/
+!.cursor/rules/**
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# --- ML experiment artifacts ---
+outputs/
+logs/
+log/
+checkpoints/
+runs/
+wandb/
+tensorboard/
+tb_logs/
+mlruns/
+neptune/
+
+# Training / eval logs (repo root or elsewhere)
+*.log
+
+# Point clouds & heavy viz exports (under outputs/ too, but also elsewhere)
+*.ply
+*.pcd
+
+# --- Data (large; keep small lists / configs in git) ---
+data/raw/
+data/interim/
+data/processed/
+data/external/
+datasets/
+
+# SynTable assets (images, depth maps) — adjust if you version a tiny sample
+data/syntable/validation/
+data/syntable/train/
+!data/syntable/lists/
+!data/syntable/lists/**
+
+# Caches & downloads
+.cache/
+.huggingface/
+**/.huggingface/
+*.npz.tmp
+*.npy.tmp
+
+# --- Archives & binaries (optional local dumps) ---
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+*.onnx
+*.engine

@@ -1,0 +1,58 @@
+# Experiment: syntable_adabins_0
+# Model: AdaBins (UnetAdaptiveBins + EfficientNet-B5 backbone)
+#
+# Run (single GPU):
+#   python scripts/adabins/train_adabins.py -c configs/syntable_adabins_0.yaml 2>&1 | tee syntable_adabins_0.log
+#
+# Run (multi GPU):
+#   torchrun --nproc_per_node=2 scripts/adabins/train_adabins.py -c configs/syntable_adabins_0.yaml 2>&1 | tee syntable_adabins_0.log
+#
+# Eval:
+#   python scripts/adabins/eval_adabins.py -c configs/syntable_adabins_0.yaml \
+#     --checkpoint outputs/syntable_adabins_0/checkpoints/best.pth
+
+data:
+  train_list: data/syntable/lists/syntable_train.txt
+  val_list: data/syntable/lists/syntable_val.txt
+  list_root: null
+  depth_scale: 1000.0
+
+model:
+  n_bins: 256
+  norm: linear
+  min_depth: 0.001
+  max_depth: 12.0
+  backend_name: tf_efficientnet_b5_ap
+  backend_pretrained: true
+  # AdaBins NYU pretrained (official v1.0 release asset; old 0.1/AdaBins_nyu.pt URL 404s)
+  pretrained_from: "url::https://github.com/shariqfarooq123/AdaBins/releases/download/v1.0/AdaBins_nyu-256-2fb686a.pth"
+  resume_from: null
+
+training:
+  img_size: 518
+  epochs: 50
+  # 2GPU 기준 effective batch=28: per_gpu_bs(14) x grad_accum(1) x ngpu(2)
+  batch_size: 7
+  lr: 3.0e-5
+  num_workers: 4
+  seed: 0
+  find_unused_parameters: true
+  eval_freq: 2
+  grad_accum_steps: 4
+  amp: false
+  patience: null
+  ema_decay: 0.9998
+  monitor_metric: abs_rel
+  monitor_mode: min
+  auto_batch_size: false
+  scale_align_eval: false
+
+device:
+  # When cuda_indices is omitted, local indices are inferred as [0..N-1].
+  cuda_visible_devices: [5]
+
+output:
+  save_path: outputs/syntable_adabins_0
+
+distributed:
+  port: null

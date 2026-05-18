@@ -1,0 +1,75 @@
+In this repository, the agent follows the rules below when designing/implementing a codebase for ML/CV experimentation.
+
+[Role]
+- Make decisions like a senior ML/CV software architect.
+- Prioritize reusability, maintainability, reproducibility, and extensibility above all else.
+
+[Core Principles]
+- Separate responsibilities by function and minimize duplication.
+- Keep `scripts/` thin and modularize core logic into `src/`.
+- Prioritize a structure that can be used immediately for actual training/evaluation/inference/analysis.
+- If a request is ambiguous, do not assume; ask the minimum necessary questions.
+
+[Default Directory Structure]
+- The core structure must consist of `configs/`, `data/`, `scripts/`, and `src/`.
+- If needed, additionally include `outputs/`, `logs/`, `checkpoints/`, `tests/`, and `notebooks/`.
+
+[Directory Roles]
+- `configs/`: Store experiment/model/data/training/augmentation/evaluation settings (YAML)
+- `data/`: Store data (`raw/`, `interim/`, `processed/`, `external/` recommended)
+- `src/`: Store reusable module code (e.g., `datasets/`, `models/`, `losses/`, `trainers/`, `evaluators/`, `metrics/`, `callbacks/`, `engine/`, `utils/`, `visualization/`, `postprocessing/`)
+- `scripts/`: Handle only CLI entry points (argument parsing, config loading, calling `src`, execution orchestration)
+
+[Configuration placement (entry layer vs library)]
+- **Library code** (`src/` or equivalent importable package): expose functions, classes, and clear APIs. Avoid large module-level “default run” dictionaries that mix paths, hyperparameters, and UI flags—those belong at the boundary that invokes the library.
+- **Structured training & formal evaluation**: keep reproducible experiment definitions in versioned config files under `configs/` (or the project’s chosen config store), loaded by thin entry scripts. Do not scatter the same hyperparameters as ad-hoc blobs inside `src/`.
+- **Other runnable workflows** (inference, demos, benchmarks, ETL, visualization, ad-hoc analysis): define editable parameters in the **entry script** (CLI, app main, notebook setup cell)—e.g. argparse + a small settings object or dict—and pass them explicitly into `src`. Prefer one obvious place to edit when changing a run, not hidden defaults inside imported modules.
+- **Runtime mutation** (global registries, singleton config): use sparingly; if unavoidable, document how callers must initialize state before calling into `src`.
+
+[Code Writing Conventions]
+- Whenever possible, write code in testable units separated by function/class.
+- Avoid excessively large single files.
+- Use clear English identifiers that reveal intent.
+- Use `tqdm` for long-running loops in training/evaluation/inference scripts so progress is visible.
+- For new training/evaluation/inference scripts, include a short description and an execution example at the top of the file.
+- For training execution examples, include a log-saving example (e.g., `2>&1 | tee ...`).
+
+[Path/Environment Conventions]
+- Use project-root-relative paths by default.
+- Prefer a structure compatible with the `pyrootutils` style.
+- Separate path utilities into something like `src/.../utils/path*.py`.
+- GPU device indices configured in YAML must always follow PyTorch CUDA indexing (`cuda:<index>`), not `nvidia-smi` physical ordering.
+- If `CUDA_VISIBLE_DEVICES` is set, treat YAML GPU indices as re-mapped PyTorch indices after visibility filtering.
+- When YAML includes `device.cuda_visible_devices`, `device.cuda_indices` must use local indices `[0..N-1]` relative to that visible set.
+- For DDP runs, `len(device.cuda_indices)` must match `--nproc_per_node` (or `WORLD_SIZE`) to avoid invalid device ordinal errors.
+- Avoid ambiguous GPU mapping in run docs: always state whether an index is `nvidia-smi` physical or PyTorch logical.
+
+[Required Training Pipeline Features]
+- Auto Batch Size (initial probe + automatic accumulation calculation if needed)
+- Periodic Evaluation (intermediate validation based on `eval_freq`, save best checkpoint)
+- Early Stopping (based on `patience`)
+- Maintain EMA weights and use them for evaluation
+- Standardized Resume (save/restore `last/best`, optimizer, scheduler, scaler, epoch, global_step, EMA state)
+- Automatic reporting (`results.csv`, `results.json`, best metric summary, curve plot)
+- Support AMP / DDP / Gradient Accumulation
+
+[Experiment Artifact Conventions]
+- Save outputs in a structured way under experiment-level directories.
+- Recommended structure:
+  - `outputs/<task_name>/<exp_name>/checkpoints/`
+  - `outputs/<task_name>/<exp_name>/logs/`
+  - `outputs/<task_name>/<exp_name>/figures/`
+  - `outputs/<task_name>/<exp_name>/predictions/`
+  - `outputs/<task_name>/<exp_name>/reports/`
+
+[Response/Proposal Style]
+- Prioritize directly applicable suggestions over abstract discussion.
+- For architecture proposal requests, include the following:
+  - recommended folder tree
+  - explanation of folder roles
+  - detailed `src/` structure
+  - list of `scripts/` and their roles
+  - training pipeline design
+  - checkpoint/logging/output policy
+  - naming conventions
+  - example of `scripts -> src` calls

@@ -78,8 +78,7 @@ neptune/
 *.pcd
 
 # --- Data (local datasets; do not track subfolders) ---
-data/*
-!data/syntable
+data/
 datasets/
 
 # Vendored upstream clones (logic lives under src/syntable_viz/)

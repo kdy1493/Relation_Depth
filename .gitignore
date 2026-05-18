@@ -51,6 +51,12 @@ profile_default/
 Thumbs.db
 Desktop.ini
 
+# --- Open3D auto-generated screenshots / camera params ---
+ScreenCapture_*.png
+ScreenCamera_*.json
+DepthCapture_*.png
+DepthCamera_*.json
+
 # --- ML experiment artifacts ---
 outputs/
 logs/
@@ -70,21 +76,13 @@ neptune/
 *.ply
 *.pcd
 
-# --- Data (large; keep small lists / configs in git) ---
-data/raw/
-data/interim/
-data/processed/
-data/external/
+# --- Data (local datasets; do not track subfolders) ---
+data/*
+!data/syntable
 datasets/
 
 # Vendored upstream clones (logic lives under src/syntable_viz/)
 external/SynTable/
-
-# SynTable assets (images, depth maps) — adjust if you version a tiny sample
-data/syntable/validation/
-data/syntable/train/
-!data/syntable/lists/
-!data/syntable/lists/**
 
 # Caches & downloads
 .cache/

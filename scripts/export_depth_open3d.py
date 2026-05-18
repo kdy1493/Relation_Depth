@@ -8,16 +8,19 @@ Requires: open3d, torch, model packages (uv sync && uv pip install -e .)
 
 Examples:
   # Depth Anything V2
-  python scripts/export_depth_open3d.py --backend depth_anything_v2 -c configs/syntable_DA_0.yaml --checkpoint outputs/syntable_DA_0/checkpoints/best.pth --max-samples 5
+  python scripts/export_depth_open3d.py --backend depth_anything_v2 -c configs/syntable_DA_0.yaml --checkpoint runs/syntable_DA_0/checkpoints/best.pth --max-samples 5
 
   # ZoeDepth
-  python scripts/export_depth_open3d.py --backend zoedepth -c configs/syntable_zoedepth_0.yaml --checkpoint outputs/syntable_zoedepth_0/checkpoints/best.pth --indices 0,1,2
+  python scripts/export_depth_open3d.py --backend zoedepth -c configs/syntable_zoedepth_0.yaml --checkpoint runs/syntable_zoedepth_0/checkpoints/best.pth --indices 0,1,2
 
   # AdaBins
-  python scripts/export_depth_open3d.py --backend adabins -c configs/syntable_adabins_0.yaml --checkpoint outputs/syntable_adabins_0/checkpoints/best.pth
+  python scripts/export_depth_open3d.py --backend adabins -c configs/syntable_adabins_0.yaml --checkpoint runs/syntable_adabins_0/checkpoints/best.pth
 
-  # GT only (no checkpoint)
+  # GT only → results/pointcloud/gt_only/
   python scripts/export_depth_open3d.py --gt-only -c configs/syntable_DA_0.yaml --max-samples 3
+
+  # Ad-hoc tag under results/
+  python scripts/export_depth_open3d.py --gt-only -c configs/syntable_DA_0.yaml --indices 923,902 --save-dir results/pointcloud/high_occ
 """
 
 from __future__ import annotations

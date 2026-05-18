@@ -58,7 +58,8 @@ DepthCapture_*.png
 DepthCamera_*.json
 
 # --- ML experiment artifacts ---
-outputs/
+runs/
+results/
 logs/
 log/
 checkpoints/
@@ -72,7 +73,7 @@ neptune/
 # Training / eval logs (repo root or elsewhere)
 *.log
 
-# Point clouds & heavy viz exports (under outputs/ too, but also elsewhere)
+# Point clouds & heavy viz exports (under results/ too, but also elsewhere)
 *.ply
 *.pcd
 

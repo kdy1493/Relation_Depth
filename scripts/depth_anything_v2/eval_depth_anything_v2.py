@@ -3,7 +3,7 @@
 
 Example:
   python scripts/depth_anything_v2/eval_depth_anything_v2.py -c configs/syntable_DA_0.yaml \\
-    --checkpoint outputs/syntable_DA_0/checkpoints/best.pth
+    --checkpoint runs/syntable_DA_0/checkpoints/best.pth
 """
 
 from __future__ import annotations

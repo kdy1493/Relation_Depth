@@ -14,7 +14,7 @@ Usage:
   python scripts/view_depth_open3d.py path/to/0_0_gt.ply path/to/0_0_pred.ply
 
   # Auto-detect: pass a directory to view all GT/Pred pairs
-  python scripts/view_depth_open3d.py runs/syntable_DA_0/figures/pointcloud/
+  python scripts/view_depth_open3d.py results/pointcloud/syntable_DA_0/
   python scripts/view_depth_open3d.py results/pointcloud/high_occ/
 
   # Adjust gap between GT and Pred (default 2m)

@@ -10,7 +10,7 @@ works in the YAML config.
 Examples:
     python scripts/data_processing/make_pair_list.py --split train
     python scripts/data_processing/make_pair_list.py --split val
-    python scripts/data_processing/make_pair_list.py --split train --split val --out-dir data/lists
+    python scripts/data_processing/make_pair_list.py --split train --split val
 """
 
 from __future__ import annotations
@@ -18,9 +18,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-import autorootcwd  # noqa: F401  # sets cwd → repo root
-
-ROOT = Path.cwd()
+ROOT = Path(__file__).resolve().parents[2]  # repo root (scripts/data_processing/ → ../..)
 
 SPLIT_DIRS = {
     "train": Path("data/syntable/train/data/mono"),
@@ -69,8 +67,8 @@ def main() -> None:
         help="Which splits to generate (default: both)",
     )
     p.add_argument(
-        "--out-dir", default="data/lists", type=Path,
-        help="Output directory for pair list files (default: data/lists)",
+        "--out-dir", default="data/syntable/lists", type=Path,
+        help="Output directory for pair list files (default: data/syntable/lists)",
     )
     args = p.parse_args()
 
